@@ -32,39 +32,38 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  output$distPlot <- renderPlot({
+    output$distPlot <- renderPlot({
 
-    timeLine <- seq(0, input$prognosisHorizont,1)
-    initialSusceptibleNumber <- input$numberOfpopulation - input$initialNumberOfInfected
-    initialRemovedNumber <- 0
-    epidemy <- createEpidemyFrame(0,
-                                  initialSusceptibleNumber,
-                                  input$initialNumberOfInfected,
-                                  initialRemovedNumber)
-    for ( t in timeLine ) {
-      epidemy <- evaluateNextEpidemyState(epidemy, t, 0.5, 0.03, input$numberOfpopulation)
-    }
+        timeLine <- seq(0, input$prognosisHorizont,1)
+        initialSusceptibleNumber <- input$numberOfpopulation - input$initialNumberOfInfected
+        initialRemovedNumber <- 0
+        epidemy <- createEpidemyFrame(0,
+                                      initialSusceptibleNumber,
+                                      input$initialNumberOfInfected,
+                                      initialRemovedNumber)
+        for ( t in timeLine ) {
+            epidemy <- evaluateNextEpidemyState(epidemy, t, 0.5, 0.03, input$numberOfpopulation)
+        }
 
-    t <- epidemy$time
-    S <- epidemy$susceptible
-    I <- epidemy$infected
-    R <- epidemy$removed
+        t <- epidemy$time
+        S <- epidemy$susceptible
+        I <- epidemy$infected
+        R <- epidemy$removed
+        plot(1, type="n", xlim=c(0, input$prognosisHorizont), ylim=c(0, input$numberOfpopulation))
 
-    plot(1, type="n", xlim=c(0, input$prognosisHorizont), ylim=c(0, input$numberOfpopulation))
+        for ( choice in input$SIRGroupChoice ) {
+            if ( choice == "susceptible" ) {
+                lines(t, S, type="l", col="#fa0000", lwd=4, lty=2)
+            }
+            if ( choice == "infected" ) {
+                lines(t, I, type="l", col="#ffaa00", xlab="N",ylab="Random X", main="График", lwd=4)
+            }
+            if ( choice == "removed" ) {
+                lines(t, R, type="l", col="#009999", xlab="N",ylab="Random X", main="График", lwd=4, lty=3)
+            }
+        }
+    })
 
-    for ( choice in input$SIRGroupChoice ) {
-      if ( choice == "susceptible" ) {
-        lines(t, S, type="l", col="#fa0000", lwd=4, lty=2)
-      }
-      if ( choice == "infected" ) {
-        lines(t, I, type="l", col="#ffaa00", xlab="N",ylab="Random X", main="График", lwd=4)
-      }
-      if ( choice == "removed" ) {
-        lines(t, R, type="l", col="#009999", xlab="N",ylab="Random X", main="График", lwd=4, lty=3)
-      }
-    }
-
-  })
 }
 
 shinyApp(ui = ui, server = server)
