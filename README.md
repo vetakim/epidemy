@@ -1,1 +1,2 @@
 # epidemy
+SIR Model
