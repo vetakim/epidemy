@@ -2,7 +2,7 @@ library(shiny)
 source(file="sir.R")
 
 ui <- fluidPage(
-                titlePanel("SIR модель!"),
+                titlePanel("SIR модель"),
                 sidebarLayout(
                               sidebarPanel(
                                            sliderInput(inputId = "numberOfpopulation",
@@ -30,11 +30,11 @@ ui <- fluidPage(
                                                        min=1,
                                                        max=60,
                                                        value=14),
-                                           actionButton(label="calculate", "Рассчитать"),
                                            checkboxGroupInput(inputId = "SIRGroupChoice",
                                                               label = "Вывести на график:",
                                                               choiceNames=list("Восприимчивые", "Инфицированные", "Выбывшие"),
-                                                              choiceValues = list("susceptible", "infected", "removed"))
+                                                              choiceValues = list("susceptible", "infected", "removed")),
+                                           actionButton(inputId="calculate", label="Рассчитать")
                                            ),
                               mainPanel(
                                         plotOutput(outputId="distPlot")
@@ -42,11 +42,9 @@ ui <- fluidPage(
                 )
 )
 
-server <- function(input, output) {
-    observeEvent(input$calculate, {
-                     session$sendCustomMessage(type="testMessage", message = "Click")
-})
-    output$distPlot <- renderPlot({
+server <- function(input, output, session) {
+
+    model <- eventReactive(input$calculate, {
         gamma = 1.0 / input$infectionPeriod
         beta = input$transitFactor
 
@@ -57,10 +55,11 @@ server <- function(input, output) {
                                       initialSusceptibleNumber,
                                       input$initialNumberOfInfected,
                                       initialRemovedNumber)
-        for ( t in timeLine ) {
-            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, input$numberOfpopulation)
-        }
+        epidemy <- modelEpidemyForTimeline(timeLine, epidemy, beta, gamma, input$numberOfpopulation)
+    })
 
+    output$distPlot <- renderPlot({
+        epidemy <- model()
         t <- epidemy$time
         S <- epidemy$susceptible
         I <- epidemy$infected
