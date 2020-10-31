@@ -2,6 +2,13 @@ createEpidemyFrame <- function(t, S, I, R) {
     print(epidemy.data <- data.frame(time = t, susceptible = S, infected = I, removed = R))
 }
 
+modelEpidemyForTimeline <- function(timeLine, epidemyFrame, beta, gamma, N) {
+    for ( t in timeLine ) {
+        epidemyFrame <- evaluateNextEpidemyState(epidemyFrame, t, beta, gamma, N)
+    }
+    print(epidemyFrame)
+}
+
 evaluateNextEpidemyState <- function(epidemyFrame, t, beta, gamma, N) {
     previousState <- epidemyFrame[nrow(epidemyFrame),]
     t0 <- previousState$time
