@@ -19,7 +19,7 @@ ui <- fluidPage(
                                                        label="Горизонт прогноза",
                                                        min=1,
                                                        max=1000,
-                                                       value=30),
+                                                       value=100),
                                            sliderInput(inputId = "transitFactor",
                                                        label="Коэффициент передачи",
                                                        min=0,
