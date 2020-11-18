@@ -46,7 +46,38 @@ ui <- fluidPage(
                                             label="Инфекционный период (дней)",
                                             min=1,
                                             max=60,
-                                            value=14)),
+                                            value=14),
+                                sliderInput(inputId = "quarantineBegin",
+                                            label="Дата ввода карантина для 80% заболевших",
+                                            min=1,
+                                            max=1000,
+                                            value=101),
+                                sliderInput(inputId = "quarantineContactsDecrease",
+                                            label="Снижение частоты контактов, %",
+                                            min=0,
+                                            max=100,
+                                            value=0),
+                                sliderInput(inputId = "remoteBegin",
+                                            label="Дата перевода на удаленку 30% населения",
+                                            min=1,
+                                            max=1000,
+                                            value=101),
+                                sliderInput(inputId = "remoteContactsDecrease",
+                                            label="Снижение частоты контактов, %",
+                                            min=0,
+                                            max=100,
+                                            value=0),
+                                sliderInput(inputId = "masksBegin",
+                                            label="Дата ввода санитарно-гигиенических мер",
+                                            min=1,
+                                            max=1000,
+                                            value=101),
+                                sliderInput(inputId = "masksContactsDecrease",
+                                            label="Снижение частоты конактов, %",
+                                            min=0,
+                                            max=100,
+                                            value=0)
+                                ),
 
                          column(3,
                                 checkboxGroupInput(inputId = "SIRGroupChoice",
@@ -66,8 +97,8 @@ server <- function(input, output, session) {
                                betaI = input$transitFactor
                                gammaII = 1.0 / input$infectionPeriod2
                                betaII = input$transitFactor2
-                               epidemyI <- calcEpidemyState(input, betaI, gammaI)
-                               epidemyII <- calcEpidemyState(input, betaII, gammaII)
+                               epidemyI <- calcEpidemyState(input, betaI, gammaI, FALSE)
+                               epidemyII <- calcEpidemyState(input, betaII, gammaII, TRUE)
                                epidemies <- data.frame(first=epidemyI, second=epidemyII)
                                return(epidemies)
 })
