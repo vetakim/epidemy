@@ -14,23 +14,20 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
     M <- calcInverseShareFromPercentage(commonParameters$masksContactsDecrease)
     rho <- commonParameters$vaccineRate / 100
     currentRho = 0
+    qFactor <- createPulse(commonParameters$quarantineBegin, commonParameters$quarantineEnd, timeLine, Q)
+    rFactor <- createPulse(commonParameters$remoteBegin, commonParameters$remoteEnd, timeLine, R)
+    mFactor <- createPulse(commonParameters$masksBegin, commonParameters$masksEnd, timeLine, M)
+    betaVector <- beta * qFactor * rFactor * mFactor
     if ( restrict ) {
+        i <- 1
         for ( t in timeLine ) {
-            if ( t == commonParameters$quarantineBegin ) {
-                beta = beta * Q
-            }
-            if ( t == commonParameters$remoteBegin ) {
-                beta = beta * R
-            }
-            if ( t == commonParameters$masksBegin ) {
-                beta = beta * M
-            }
 
             if ( t == commonParameters$vaccineBegin ) {
                 currentRho = rho
             }
 
-            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, currentRho, N)
+            epidemy <- evaluateNextEpidemyState(epidemy, t, betaVector[i], gamma, currentRho, N)
+            i <- i + 1
         }
     } else {
         for ( t in timeLine ) {
@@ -44,3 +41,13 @@ calcInverseShareFromPercentage <- function(percentage)
 {
     return ( 1 - percentage / 100 )
 }
+
+createPulse <- function(tmin, tmax, ts, amplitude)
+{
+    f <- array(1, dim=length(ts))
+    for ( t in tmin:tmax ) {
+        f[t] <- amplitude
+    }
+    return(f)
+}
+
