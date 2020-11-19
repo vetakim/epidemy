@@ -2,20 +2,13 @@ createEpidemyFrame <- function(t, S, I, R) {
     return(epidemy.data <- data.frame(time = t, susceptible = S, infected = I, removed = R))
 }
 
-modelEpidemyForTimeline <- function(timeLine, epidemyFrame, beta, gamma, N) {
-    for ( t in timeLine ) {
-        epidemyFrame <- evaluateNextEpidemyState(epidemyFrame, t, beta, gamma, N)
-    }
-    return(epidemyFrame)
-}
-
-evaluateNextEpidemyState <- function(epidemyFrame, t, beta, gamma, N) {
+evaluateNextEpidemyState <- function(epidemyFrame, t, beta, gamma, rho, N) {
     previousState <- epidemyFrame[nrow(epidemyFrame),]
     t0 <- previousState$time
     prevS <- previousState$susceptible
     prevI <- previousState$infected
     prevR <- previousState$removed
-    dS <- calcSusceptible( prevI, prevS, beta, N )
+    dS <- calcSusceptible( prevI, prevS, beta, rho, N )
     dI <- calcInfected( prevI, prevS, beta, gamma, N)
     dR <- calcRemoved( prevI, gamma)
     S <- calcValueWithDerivative(t, t0, prevS, dS)
@@ -30,8 +23,8 @@ calcValueWithDerivative <- function(t1, t0, x0, dx) {
     return( dx * ( t1 - t0 ) + x0 )
 }
 
-calcSusceptible <- function( prevI, prevS, beta, N ) {
-    return( -beta * prevI * prevS / N )
+calcSusceptible <- function( prevI, prevS, beta, rho, N ) {
+    return( -beta * prevI * prevS / N - rho * prevS )
 }
 
 calcInfected <- function( prevI, prevS, beta, gamma, N) {
