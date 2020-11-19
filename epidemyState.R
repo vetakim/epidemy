@@ -9,30 +9,24 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
                                   initialSusceptibleNumber,
                                   commonParameters$initialNumberOfInfected,
                                   initialRemovedNumber)
-    Q <- calcInverseShareFromPercentage(commonParameters$quarantineContactsDecrease)
-    R <- calcInverseShareFromPercentage(commonParameters$remoteContactsDecrease)
-    M <- calcInverseShareFromPercentage(commonParameters$masksContactsDecrease)
-    rho <- commonParameters$vaccineRate / 100
+    Q <- calcInverseShareFromPercentage(restrict$quarantineContactsDecrease)
+    R <- calcInverseShareFromPercentage(restrict$remoteContactsDecrease)
+    M <- calcInverseShareFromPercentage(restrict$masksContactsDecrease)
+    rho <- restrict$vaccineRate / 100
     currentRho = 0
-    qFactor <- createPulse(commonParameters$quarantineBegin, commonParameters$quarantineEnd, timeLine, Q)
-    rFactor <- createPulse(commonParameters$remoteBegin, commonParameters$remoteEnd, timeLine, R)
-    mFactor <- createPulse(commonParameters$masksBegin, commonParameters$masksEnd, timeLine, M)
+    qFactor <- createPulse(restrict$quarantineBegin, restrict$quarantineEnd, timeLine, Q)
+    rFactor <- createPulse(restrict$remoteBegin, restrict$remoteEnd, timeLine, R)
+    mFactor <- createPulse(restrict$masksBegin, restrict$masksEnd, timeLine, M)
     betaVector <- beta * qFactor * rFactor * mFactor
-    if ( restrict ) {
-        i <- 1
-        for ( t in timeLine ) {
+    i <- 1
+    for ( t in timeLine ) {
 
-            if ( t == commonParameters$vaccineBegin ) {
-                currentRho = rho
-            }
+        if ( t == commonParameters$vaccineBegin ) {
+            currentRho = rho
+        }
 
-            epidemy <- evaluateNextEpidemyState(epidemy, t, betaVector[i], gamma, currentRho, N)
-            i <- i + 1
-        }
-    } else {
-        for ( t in timeLine ) {
-            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, currentRho, N)
-        }
+        epidemy <- evaluateNextEpidemyState(epidemy, t, betaVector[i], gamma, currentRho, N)
+        i <- i + 1
     }
     return(epidemy)
 }
