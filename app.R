@@ -76,6 +76,16 @@ ui <- fluidPage(
                                             label="Снижение частоты конактов, %",
                                             min=0,
                                             max=100,
+                                            value=0),
+                                sliderInput(inputId = "vaccineBegin",
+                                            label="Дата начала вакцинации",
+                                            min=1,
+                                            max=1000,
+                                            value=101),
+                                sliderInput(inputId = "vaccineRate",
+                                            label="Доля вакцинированных, %",
+                                            min=0,
+                                            max=100,
                                             value=0)
                                 ),
 

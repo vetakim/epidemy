@@ -12,6 +12,8 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
     Q <- calcInverseShareFromPercentage(commonParameters$quarantineContactsDecrease)
     R <- calcInverseShareFromPercentage(commonParameters$remoteContactsDecrease)
     M <- calcInverseShareFromPercentage(commonParameters$masksContactsDecrease)
+    rho <- commonParameters$vaccineRate / 100
+    currentRho = 0
     if ( restrict ) {
         for ( t in timeLine ) {
             if ( t == commonParameters$quarantineBegin ) {
@@ -23,11 +25,16 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
             if ( t == commonParameters$masksBegin ) {
                 beta = beta * M
             }
-            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, N)
+
+            if ( t == commonParameters$vaccineBegin ) {
+                currentRho = rho
+            }
+
+            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, currentRho, N)
         }
     } else {
         for ( t in timeLine ) {
-            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, N)
+            epidemy <- evaluateNextEpidemyState(epidemy, t, beta, gamma, currentRho, N)
         }
     }
     return(epidemy)
