@@ -181,28 +181,42 @@ server <- function(input, output, session) {
 
     output$distPlot <- renderPlot({
         epidemy <- model()
+        dates = seq(input$beginDate, input$beginDate + input$prognosisHorizont + 1, 1)
+        weeks = seq(input$beginDate, input$beginDate + input$prognosisHorizont + 1, 30)
         t <- epidemy$first.time
-        S <- epidemy$first.susceptible
-        I <- epidemy$first.infected
-        R <- epidemy$first.removed
+        S <- epidemy$first.susceptible / 1e3
+        I <- epidemy$first.infected / 1e3
+        R <- epidemy$first.removed / 1e3
         t2 <- epidemy$second.time
-        S2 <- epidemy$second.susceptible
-        I2 <- epidemy$second.infected
-        R2 <- epidemy$second.removed
-        plot(1, type="n", xlim=c(0, input$prognosisHorizont), ylim=c(0, input$numberOfpopulation))
+        S2 <- epidemy$second.susceptible / 1e3
+        I2 <- epidemy$second.infected / 1e3
+        R2 <- epidemy$second.removed / 1e3
+        sColor <- "#fa0000"
+        iColor <- "#ffaa00"
+        rColor <- "#009999"
+        plot(input$beginDate, 0, type="n", xlim=c(input$beginDate, input$beginDate + input$prognosisHorizont + 1),
+             ylim=c(0, input$numberOfpopulation / 1e3),
+             ylab="Численность (тыс)", xlab="Дата", xaxt="n"
+        )
+        axis.Date(side = 1, at = weeks, format = "%Y-%m-%d")
+        grid(col='lightgray')
+        legend("right", c("Восприимчивые", "Инфицированные", "Выбывшие"), fill=c(sColor, iColor, rColor),
+               border="lightgray"
+        )
+        legend("left", c("Модель I", "Модель II"), lty=c(1, 3), lwd=c(4, 5))
 
         for ( choice in input$SIRGroupChoice ) {
             if ( choice == "susceptible" ) {
-                lines(t, S, type="l", col="#fa0000", lwd=4, lty=1)
-                lines(t2, S2, type="l", col="#ff7373", lwd=5, lty=3)
+                lines(dates, S, type="l", col=sColor, lwd=4, lty=1)
+                lines(dates, S2, type="l", col="#ff7373", lwd=5, lty=3)
             }
             if ( choice == "infected" ) {
-                lines(t, I, type="l", col="#ffaa00", xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
-                lines(t2, I2, type="l", col="#ffd073", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                lines(dates, I, type="l", col=iColor, xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
+                lines(dates, I2, type="l", col="#ffd073", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
             }
             if ( choice == "removed" ) {
-                lines(t, R, type="l", col="#009999", xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
-                lines(t2, R2, type="l", col="#5ccccc", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                lines(dates, R, type="l", col=rColor, xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
+                lines(dates, R2, type="l", col="#5ccccc", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
             }
         }
     })
