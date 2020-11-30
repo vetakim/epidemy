@@ -39,8 +39,12 @@ calcInverseShareFromPercentage <- function(percentage)
 createPulse <- function(tmin, tmax, ts, amplitude)
 {
     f <- array(1, dim=length(ts))
+    tsmin = min(ts)
+    tsmax = max(ts)
     for ( t in tmin:tmax ) {
-        f[t] <- amplitude
+        if ( t > tsmin && t < tsmax ) {
+            f[t] <- amplitude
+        }
     }
     return(f)
 }
