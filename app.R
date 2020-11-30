@@ -25,8 +25,20 @@ ui <- fluidPage(
                                                    column(6,
                                                           checkboxGroupInput(inputId = "SIRGroupChoice",
                                                                              label = "Вывести на график:",
-                                                                             choiceNames=list("Восприимчивые", "Инфицированные", "Выбывшие"),
-                                                                             choiceValues = list("susceptible", "infected", "removed")),
+                                                                             choiceNames=list(
+                                                                                              "Восприимчивые",
+                                                                                              "Инфицированные",
+                                                                                              "Выбывшие"
+                                                                                              ),
+                                                                             choiceValues = list(
+                                                                                                 "susceptible",
+                                                                                                 "infected",
+                                                                                                 "removed"
+                                                                                                 )
+                                                                             ),
+                                                          checkboxInput(inputId = "showSecondModel",
+                                                                        label="Показывать вторую модель",
+                                                                        value=FALSE),
                                                           actionButton(inputId="calculate", label="Рассчитать"),
                                                    )
                                           ),
@@ -208,15 +220,21 @@ server <- function(input, output, session) {
         for ( choice in input$SIRGroupChoice ) {
             if ( choice == "susceptible" ) {
                 lines(dates, S, type="l", col=sColor, lwd=4, lty=1)
-                lines(dates, S2, type="l", col="#ff7373", lwd=5, lty=3)
+                if ( input$showSecondModel ) {
+                    lines(dates, S2, type="l", col="#ff7373", lwd=5, lty=3)
+                }
             }
             if ( choice == "infected" ) {
                 lines(dates, I, type="l", col=iColor, xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
-                lines(dates, I2, type="l", col="#ffd073", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                if ( input$showSecondModel ) {
+                    lines(dates, I2, type="l", col="#ffd073", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                }
             }
             if ( choice == "removed" ) {
                 lines(dates, R, type="l", col=rColor, xlab="N",ylab="Random X", main="График", lwd=4, lty=1)
-                lines(dates, R2, type="l", col="#5ccccc", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                if ( input$showSecondModel ) {
+                    lines(dates, R2, type="l", col="#5ccccc", xlab="N",ylab="Random X", main="График", lwd=5, lty=3)
+                }
             }
         }
     })
