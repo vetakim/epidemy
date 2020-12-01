@@ -22,12 +22,13 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
     print(restrict$vaccineBegin)
     for ( t in timeLine ) {
 
-        if ( t == restrict$vaccineBegin ) {
-            currentRho = rho
-        }
-        if ( currentRho == 0 ) {
-
-
+        #if ( t == restrict$vaccineBegin ) {
+            #currentRho = rho
+        #}
+        if ( t >= restrict$vaccineBegin ) {
+            if ( !( t %% restrict$vaccinePeriod ) ) {
+                currentRho = restrict$vaccinatedNumber / epidemy$susceptible
+            }
         }
 
         epidemy <- evaluateNextEpidemyState(epidemy, t, betaVector[i], gamma, currentRho, N)
