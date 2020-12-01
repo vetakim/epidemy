@@ -19,12 +19,10 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
     mFactor <- createPulse(restrict$masksBegin, restrict$masksEnd, timeLine, M)
     betaVector <- beta * qFactor * rFactor * mFactor
     i <- 1
-    print(restrict$vaccineBegin)
     for ( t in timeLine ) {
 
         if ( t == restrict$vaccineBegin ) {
-            currentRho = rho
-            print(t)
+            currentRho = restrict$vaccinatedNumber / restrict$vaccinePeriod
         }
 
         epidemy <- evaluateNextEpidemyState(epidemy, t, betaVector[i], gamma, currentRho, N)
