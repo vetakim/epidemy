@@ -84,12 +84,6 @@ ui <- fluidPage(
                                                            min='2019-11-20', value='2020-06-30'),
                                                  hr(),
                                                  h4("Вакцинация"),
-                                                 selectInput(
-                                                             inputId="vaccineChoice",
-                                                             label="Выбор модели вакцинирования",
-                                                             choices=c("Вакцинация групп с заданной численностью",
-                                                                       "Постепенная вакцинация доли восприимчивого населения")
-                                                             ),
                                                  dateInput(inputId = "vaccineBegin",
                                                            label="Дата начала вакцинации",
                                                            min='2019-11-20', value='2020-06-29'),
@@ -98,10 +92,7 @@ ui <- fluidPage(
                                                              min=0, max=14e6, value=100),
                                                  sliderInput(inputId = "vaccinePeriod",
                                                              label="Длительность единовременной вакцинации группы",
-                                                             min=1, max=1000, value=1),
-                                                 sliderInput(inputId = "vaccineRate",
-                                                             label="Доля вакцинированных за день, %",
-                                                             min=0, max=100, value=0)
+                                                             min=1, max=1000, value=1)
                                                  ),
 
                                           column(6,
@@ -145,12 +136,6 @@ ui <- fluidPage(
                                                            min='2019-11-20', value='2020-06-30'),
                                                  hr(),
                                                  h4("Вакцинация"),
-                                                 selectInput(
-                                                             inputId="vaccineChoice2",
-                                                             label="Выбор модели вакцинирования",
-                                                             choices=c("Вакцинация групп с заданной численностью",
-                                                                       "Постепенная вакцинация доли восприимчивого населения")
-                                                             ),
                                                  dateInput(inputId = "vaccineBegin2",
                                                            label="Дата начала вакцинации",
                                                            min='2019-11-20', value='2020-06-29'),
@@ -159,11 +144,7 @@ ui <- fluidPage(
                                                              min=0, max=14e6, value=100),
                                                  sliderInput(inputId = "vaccinePeriod2",
                                                              label="Длительность единовременной вакцинации группы",
-                                                             min=1, max=1000, value=1),
-                                                 sliderInput(inputId = "vaccineRate2",
-                                                             label="Доля вакцинированных за день, %",
-                                                             min=0, max=100, value=0
-                                                 )
+                                                             min=1, max=1000, value=1)
                                           )
                                 )
                                 ),
@@ -179,16 +160,6 @@ relativeNumericDate <- function(beginDate, absoluteDate)
 }
 
 server <- function(input, output, session) {
-    #observeEvent(input$vaccineChoice,
-                 #{
-                     #if ( input$vaccineChoice == "Вакцинация групп с заданной численностью" ) {
-                         #shinyjs::hide(id="vaccineRate2")
-                     #} else {
-                         #shinyjs::hide(id="vaccinatedNumber2")
-                         #shinyjs::hide(id="vaccinePeriod2")
-                     #}
-                 #}
-    #)
 
     model <- eventReactive(input$calculate, {
                                begin = input$beginDate
@@ -208,8 +179,7 @@ server <- function(input, output, session) {
                                                      masksContactsDecrease = input$masksContactsDecrease,
                                                      vaccineBegin = relativeNumericDate(begin, input$vaccineBegin),
                                                      vaccinatedNumber = input$vaccinatedNumber,
-                                                     vaccinePeriod = input$vaccinePeriod,
-                                                     vaccineRate =  input$vaccineRate
+                                                     vaccinePeriod = input$vaccinePeriod
                                )
                                restrictII = data.frame(
                                                      quarantineBegin = relativeNumericDate(begin, input$quarantineBegin2),
@@ -223,8 +193,7 @@ server <- function(input, output, session) {
                                                      masksContactsDecrease = input$masksContactsDecrease2,
                                                      vaccineBegin = relativeNumericDate(begin, input$vaccineBegin2),
                                                      vaccinatedNumber = input$vaccinatedNumber2,
-                                                     vaccinePeriod = input$vaccinePeriod2,
-                                                     vaccineRate = input$vaccineRate2
+                                                     vaccinePeriod = input$vaccinePeriod2
                                )
                                epidemyI <- calcEpidemyState(input,  betaI, gammaI, restrictI)
                                epidemyII <- calcEpidemyState(input, betaII, gammaII, restrictII)
