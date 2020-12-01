@@ -34,14 +34,14 @@ ui <- fluidPage(
                                                                                                  "susceptible",
                                                                                                  "infected",
                                                                                                  "removed"
-                                                                                                 )
+                                                                             )
                                                                              ),
                                                           checkboxInput(inputId = "showSecondModel",
                                                                         label="Показывать вторую модель",
                                                                         value=FALSE),
                                                           actionButton(inputId="calculate", label="Рассчитать"),
                                                    )
-                                          ),
+                                                   ),
 
                                           column(6,
                                                  h1("Модель I"),
@@ -54,40 +54,53 @@ ui <- fluidPage(
                                                  h3("Меры контроля"),
                                                  h4("Ввод карантина для заболевших"),
                                                  dateInput(inputId = "quarantineBegin",
-                                                             label="Дата ввода карантина",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата ввода карантина",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "quarantineContactsDecrease",
                                                              label="Снижение доли контактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "quarantineEnd",
-                                                             label="Дата снятия карантина",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия карантина",
+                                                           min='2019-11-20', value='2020-06-30'),
                                                  h4("Перевод на удаленную работу"),
                                                  dateInput(inputId = "remoteBegin",
-                                                             label="Дата перевода",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата перевода",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "remoteContactsDecrease",
                                                              label="Снижение доли контактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "remoteEnd",
-                                                             label="Дата снятия перевода",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия перевода",
+                                                           min='2019-11-20', value='2020-06-30'),
                                                  h4("Ввод санитарно-гигиенических мер"),
                                                  dateInput(inputId = "masksBegin",
-                                                             label="Дата ввода мер",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата ввода мер",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "masksContactsDecrease",
                                                              label="Снижение доли конактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "masksEnd",
-                                                             label="Дата снятия мер",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия мер",
+                                                           min='2019-11-20', value='2020-06-30'),
+                                                 hr(),
                                                  h4("Вакцинация"),
+                                                 selectInput(
+                                                             inputId="vaccineChoice",
+                                                             label="Выбор модели вакцинирования",
+                                                             choices=c("Вакцинация групп с заданной численностью",
+                                                                       "Постепенная вакцинация доли восприимчивого населения")
+                                                             ),
                                                  dateInput(inputId = "vaccineBegin",
-                                                             label="Дата начала вакцинации",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата начала вакцинации",
+                                                           min='2019-11-20', value='2020-06-29'),
+                                                 sliderInput(inputId = "vaccinatedNumber",
+                                                             label="Размер единовременно вакцинируемой группы",
+                                                             min=0, max=14e6, value=100),
+                                                 sliderInput(inputId = "vaccinePeriod",
+                                                             label="Длительность единовременной вакцинации группы",
+                                                             min=1, max=1000, value=1),
                                                  sliderInput(inputId = "vaccineRate",
-                                                             label="Доля вакцинированных, %",
+                                                             label="Доля вакцинированных за день, %",
                                                              min=0, max=100, value=0)
                                                  ),
 
@@ -102,41 +115,55 @@ ui <- fluidPage(
                                                  h3("Меры контроля"),
                                                  h4("Ввод карантина для заболевших"),
                                                  dateInput(inputId = "quarantineBegin2",
-                                                             label="Дата ввода карантина",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата ввода карантина",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "quarantineContactsDecrease2",
                                                              label="Снижение доли контактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "quarantineEnd2",
-                                                             label="Дата снятия карантина",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия карантина",
+                                                           min='2019-11-20', value='2020-06-30'),
                                                  h4("Перевод на удаленную работу"),
                                                  dateInput(inputId = "remoteBegin2",
-                                                             label="Дата перевода",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата перевода",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "remoteContactsDecrease2",
                                                              label="Снижение доли контактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "remoteEnd2",
-                                                             label="Дата снятия перевода",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия перевода",
+                                                           min='2019-11-20', value='2020-06-30'),
                                                  h4("Ввод санитарно-гигиенических мер"),
                                                  dateInput(inputId = "masksBegin2",
-                                                             label="Дата ввода мер",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата ввода мер",
+                                                           min='2019-11-20', value='2020-06-29'),
                                                  sliderInput(inputId = "masksContactsDecrease2",
                                                              label="Снижение доли конактов, %",
                                                              min=0, max=100, value=0),
                                                  dateInput(inputId = "masksEnd2",
-                                                             label="Дата снятия мер",
-                                                             min='2019-11-20', value='2020-06-30'),
+                                                           label="Дата снятия мер",
+                                                           min='2019-11-20', value='2020-06-30'),
+                                                 hr(),
                                                  h4("Вакцинация"),
+                                                 selectInput(
+                                                             inputId="vaccineChoice2",
+                                                             label="Выбор модели вакцинирования",
+                                                             choices=c("Вакцинация групп с заданной численностью",
+                                                                       "Постепенная вакцинация доли восприимчивого населения")
+                                                             ),
                                                  dateInput(inputId = "vaccineBegin2",
-                                                             label="Дата начала вакцинации",
-                                                             min='2019-11-20', value='2020-06-29'),
+                                                           label="Дата начала вакцинации",
+                                                           min='2019-11-20', value='2020-06-29'),
+                                                 sliderInput(inputId = "vaccinatedNumber2",
+                                                             label="Размер единовременно вакцинируемой группы",
+                                                             min=0, max=14e6, value=100),
+                                                 sliderInput(inputId = "vaccinePeriod2",
+                                                             label="Длительность единовременной вакцинации группы",
+                                                             min=1, max=1000, value=1),
                                                  sliderInput(inputId = "vaccineRate2",
-                                                             label="Доля вакцинированных, %",
-                                                             min=0, max=100, value=0)
+                                                             label="Доля вакцинированных за день, %",
+                                                             min=0, max=100, value=0
+                                                 )
                                           )
                                 )
                                 ),
@@ -152,6 +179,16 @@ relativeNumericDate <- function(beginDate, absoluteDate)
 }
 
 server <- function(input, output, session) {
+    #observeEvent(input$vaccineChoice,
+                 #{
+                     #if ( input$vaccineChoice == "Вакцинация групп с заданной численностью" ) {
+                         #shinyjs::hide(id="vaccineRate2")
+                     #} else {
+                         #shinyjs::hide(id="vaccinatedNumber2")
+                         #shinyjs::hide(id="vaccinePeriod2")
+                     #}
+                 #}
+    #)
 
     model <- eventReactive(input$calculate, {
                                begin = input$beginDate
@@ -170,6 +207,8 @@ server <- function(input, output, session) {
                                                      masksEnd = relativeNumericDate(begin, input$masksEnd),
                                                      masksContactsDecrease = input$masksContactsDecrease,
                                                      vaccineBegin = relativeNumericDate(begin, input$vaccineBegin),
+                                                     vaccinatedNumber = input$vaccinatedNumber,
+                                                     vaccinePeriod = input$vaccinePeriod,
                                                      vaccineRate =  input$vaccineRate
                                )
                                restrictII = data.frame(
@@ -183,6 +222,8 @@ server <- function(input, output, session) {
                                                      masksEnd = relativeNumericDate(begin, input$masksEnd2),
                                                      masksContactsDecrease = input$masksContactsDecrease2,
                                                      vaccineBegin = relativeNumericDate(begin, input$vaccineBegin2),
+                                                     vaccinatedNumber = input$vaccinatedNumber2,
+                                                     vaccinePeriod = input$vaccinePeriod2,
                                                      vaccineRate = input$vaccineRate2
                                )
                                epidemyI <- calcEpidemyState(input,  betaI, gammaI, restrictI)
