@@ -21,7 +21,7 @@ calcEpidemyState <- function(commonParameters, beta, gamma, restrict) {
     i <- 1
     for ( t in timeLine ) {
 
-        if ( t == restrict$vaccineBegin ) {
+        if ( t >= restrict$vaccineBegin ) {
             currentRho = restrict$vaccinatedNumber / restrict$vaccinePeriod
         }
 
