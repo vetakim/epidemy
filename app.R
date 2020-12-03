@@ -203,8 +203,8 @@ server <- function(input, output, session) {
 
     output$distPlot <- renderPlot({
         epidemy <- model()
-        dates = seq(input$beginDate, input$beginDate + input$prognosisHorizont + 1, 1)
-        weeks = seq(input$beginDate, input$beginDate + input$prognosisHorizont + 1, 30)
+        dates = seq(input$beginDate, input$beginDate + length(epidemy$first.time) - 1, 1)
+        weeks = seq(input$beginDate, input$beginDate + length(epidemy$first.time) - 1, 30)
         t <- epidemy$first.time
         S <- epidemy$first.susceptible / 1e3
         I <- epidemy$first.infected / 1e3
